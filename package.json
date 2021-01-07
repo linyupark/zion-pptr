@@ -1,0 +1,37 @@
+{
+  "name": "@x011/pptr",
+  "version": "1.0.0",
+  "description": "Launch puppeteer easy",
+  "keywords": [
+    "puppeteer"
+  ],
+  "main": "./dist/index.js",
+  "module": "./dist/index.esm.js",
+  "jsnext:main": "./dist/index.esm.js",
+  "source": "./src/index.ts",
+  "typings": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.umd.js",
+      "import": "./dist/index.esm.js"
+    }
+  },
+  "scripts": {
+    "dev": "microbundle watch",
+    "build": "microbundle --compress"
+  },
+  "author": "linyupark@gmail.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/linyupark/zion-pptr"
+  },
+  "license": "MIT",
+  "peerDependencies": {
+    "puppeteer-core": "^5.x"
+  },
+  "devDependencies": {
+    "@types/puppeteer-core": "^5.4.0",
+    "puppeteer-core": "^5.x",
+    "microbundle": "^0.x"
+  }
+}
