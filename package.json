@@ -1,6 +1,6 @@
 {
   "name": "@x011/pptr",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Launch puppeteer easier",
   "keywords": [
     "puppeteer"
@@ -27,11 +27,15 @@
   },
   "license": "MIT",
   "peerDependencies": {
-    "puppeteer-core": "^5.x"
+    "puppeteer-core": "^5.x",
+    "puppeteer-extra": "^3.x",
+    "puppeteer-extra-plugin-stealth": "^2.x"
   },
   "devDependencies": {
     "@types/puppeteer-core": "^5.4.0",
+    "microbundle": "^0.x",
     "puppeteer-core": "^5.x",
-    "microbundle": "^0.x"
+    "puppeteer-extra": "^3.x",
+    "puppeteer-extra-plugin-stealth": "^2.x"
   }
 }

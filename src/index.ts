@@ -1,14 +1,14 @@
-import puppeteer, {
-  DirectNavigationOptions,
-  LaunchOptions,
-} from "puppeteer-core";
+import { DirectNavigationOptions, LaunchOptions } from "puppeteer-core";
+import puppeteer from "puppeteer-extra";
+import stealth from "puppeteer-extra-plugin-stealth";
+puppeteer.use(stealth());
 
 interface pptrParams extends LaunchOptions {
   executablePath:
     | "/usr/bin/chromium-browser"
     | "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
     | string;
-  disableList?: ("sandbox" | "extensions" | "gpu" | "automation")[]; // 啟動屏蔽模塊
+  disableList?: ("sandbox" | "extensions" | "gpu")[]; // 啟動屏蔽模塊
   proxy?: string; // 瀏覽器使用代理地址
   abortUrlRegList?: RegExp[]; // 屏蔽請求URL加速加載
 }
@@ -28,6 +28,7 @@ const objectFilter = function (data, fn) {
 async function pptr(params: pptrParams) {
   let mergedParams: any = {};
   let args = params?.args ?? [];
+  let disableList = params?.disableList ?? [];
   // 屏蔽模塊
   if (params.disableList) {
     params.disableList.forEach((item) => {
@@ -74,14 +75,6 @@ async function pptr(params: pptrParams) {
             }
           });
           match ? req.abort() : req.continue();
-        });
-      }
-      // webdriver
-      if (~params.disableList.indexOf("automation")) {
-        await page.evaluateOnNewDocument(() => {
-          Object.defineProperty(navigator, "webdriver", {
-            get: () => undefined,
-          });
         });
       }
       if (url) {
