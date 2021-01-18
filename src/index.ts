@@ -83,6 +83,12 @@ async function pptr(params: pptrParams) {
           match ? req.abort() : req.continue();
         });
       }
+      // webdriver
+      if (~params.disableList.indexOf("automation")) {
+        await page.evaluate(async () => {
+          Object.defineProperty(navigator, "webdriver", { get: () => false });
+        });
+      }
       if (url) {
         await page.goto(url, options);
       }
