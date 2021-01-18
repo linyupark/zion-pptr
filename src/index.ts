@@ -56,18 +56,11 @@ async function pptr(params: pptrParams) {
     ),
   };
 
-  // window.navigator.webdriver = false
-  if (~params.disableList.indexOf("automation")) {
-    mergedParams.ignoreDefaultArgs = params.ignoreDefaultArgs ?? [];
-    mergedParams.ignoreDefaultArgs.push("--enable-automation");
-  }
-
   const browser = await puppeteer.launch(mergedParams);
-  const initPage = (await browser.pages())[0];
+  await (await browser.pages())[0].close();
 
   return {
     self: browser,
-    initPage,
     newPage: async (url?: string, options?: DirectNavigationOptions) => {
       const page = await browser.newPage();
       // 過濾
@@ -85,8 +78,10 @@ async function pptr(params: pptrParams) {
       }
       // webdriver
       if (~params.disableList.indexOf("automation")) {
-        await page.evaluate(async () => {
-          Object.defineProperty(navigator, "webdriver", { get: () => false });
+        await page.evaluateOnNewDocument(() => {
+          Object.defineProperty(navigator, "webdriver", {
+            get: () => undefined,
+          });
         });
       }
       if (url) {
