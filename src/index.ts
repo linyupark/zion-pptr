@@ -8,7 +8,7 @@ interface pptrParams extends LaunchOptions {
     | "/usr/bin/chromium-browser"
     | "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
     | string;
-  disableList?: ("sandbox" | "extensions" | "gpu")[]; // 啟動屏蔽模塊
+  disableList?: ("sandbox" | "extensions" | "gpu" | "automation")[]; // 啟動屏蔽模塊
   proxy?: string; // 瀏覽器使用代理地址
   abortUrlRegList?: RegExp[]; // 屏蔽請求URL加速加載
 }
@@ -26,7 +26,7 @@ const objectFilter = function (data, fn) {
 };
 
 async function pptr(params: pptrParams) {
-  let mergedParams = {};
+  let mergedParams: any = {};
   let args = params?.args ?? [];
   // 屏蔽模塊
   if (params.disableList) {
@@ -56,12 +56,18 @@ async function pptr(params: pptrParams) {
     ),
   };
 
+  // window.navigator.webdriver = false
+  if (~params.disableList.indexOf("automation")) {
+    mergedParams.ignoreDefaultArgs = params.ignoreDefaultArgs ?? [];
+    mergedParams.ignoreDefaultArgs.push("--enable-automation");
+  }
+
   const browser = await puppeteer.launch(mergedParams);
-  // 初始化頁面先關閉確保沒有空頁面
-  await (await browser.pages())[0].close();
+  const initPage = (await browser.pages())[0];
 
   return {
     self: browser,
+    initPage,
     newPage: async (url?: string, options?: DirectNavigationOptions) => {
       const page = await browser.newPage();
       // 過濾
