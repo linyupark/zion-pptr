@@ -1,7 +1,7 @@
 {
   "name": "@x011/pptr",
-  "version": "1.0.1",
-  "description": "Launch puppeteer easy",
+  "version": "1.0.2",
+  "description": "Launch puppeteer easier",
   "keywords": [
     "puppeteer"
   ],
